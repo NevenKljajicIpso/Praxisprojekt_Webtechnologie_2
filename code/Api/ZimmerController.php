@@ -9,7 +9,7 @@ class ZimmerController {
         $this->db = new Database();
     }
 
-    public function getZimmer() {
+    public function getZimmer($id = null) {
         // Verbindung zur Datenbank herstellen
         $dbConnection = $this->db->connect();
     
@@ -47,7 +47,8 @@ class ZimmerController {
     }
     
 
-    public function getZimmerById($zimmerId) {
+    public function getZimmerById($params) {
+        $zimmerId = $params[0];
         // Verbindung zur Datenbank herstellen
         $dbConnection = $this->db->connect();
     
@@ -151,7 +152,9 @@ class ZimmerController {
     }
     
 
-    public function updateZimmer($zimmerId) {
+    public function updateZimmer($params) {
+        $zimmerId = $params['id'];
+
         // Verbindung zur Datenbank herstellen
         $dbConnection = $this->db->connect();
     
@@ -210,7 +213,9 @@ class ZimmerController {
     }
     
 
-    public function deleteZimmer($zimmerId) {
+    public function deleteZimmer($params) {
+        $zimmerId = $params['id'];
+
         // Verbindung zur Datenbank herstellen
         $dbConnection = $this->db->connect();
     
@@ -220,7 +225,7 @@ class ZimmerController {
         // Vorbereiten der Abfrage
         $statement = $dbConnection->prepare($query);
     
-        // Parameter binden
+        // Zimmer-ID als Parameter binden
         $statement->bindParam(':zimmerId', $zimmerId, PDO::PARAM_INT);
     
         // Abfrage ausführen
@@ -237,6 +242,5 @@ class ZimmerController {
             echo json_encode(array('message' => 'Fehler beim Löschen des Zimmers.'));
         }
     }
-    
 }
 ?>
