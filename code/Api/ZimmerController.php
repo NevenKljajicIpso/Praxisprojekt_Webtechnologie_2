@@ -153,7 +153,7 @@ class ZimmerController {
     
 
     public function updateZimmer($params) {
-        $zimmerId = $params['id'];
+        $zimmerId = $params[0];
 
         // Verbindung zur Datenbank herstellen
         $dbConnection = $this->db->connect();
@@ -214,7 +214,7 @@ class ZimmerController {
     
 
     public function deleteZimmer($params) {
-        $zimmerId = $params['id'];
+        $zimmerId = $params[0];
 
         // Verbindung zur Datenbank herstellen
         $dbConnection = $this->db->connect();

@@ -3,6 +3,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', true);
 
 require_once 'ZimmerController.php';
+require_once 'ZusatzleistungenController.php';
 
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 $scriptName = $_SERVER['SCRIPT_NAME'];
@@ -15,20 +16,28 @@ $routes = [
     'GET' => [
         '/zimmer' => 'getZimmer',
         '/zimmer/(\d+)' => 'getZimmerById',
+        '/zusatzleistungen' => 'getZusatzleistungen',
+        '/zusatzleistungen/(\d+)' => 'getZusatzleistungenById',
     ],
     'POST' => [
         '/zimmer' => 'createZimmer',
+        '/zusatzleistungen' => 'createZusatzleistung',
     ],
     'PUT' => [
         '/zimmer/(\d+)' => 'updateZimmer',
+        '/zusatzleistungen/(\d+)' => 'updateZusatzleistung',
     ],
     'DELETE' => [
         '/zimmer/(\d+)' => 'deleteZimmer',
+        '/zusatzleistungen/(\d+)' => 'deleteZusatzleistung',
     ],
 ];
 
 // ZimmerController-Objekt erstellen
 $zimmerController = new ZimmerController();
+
+// ZusatzleistungenController-Objekt erstellen
+$zusatzleistungenController = new ZusatzleistungenController();
 
 // Überprüfe, ob die angeforderte Route definiert ist, und rufe die entsprechende Callback-Funktion auf
 if (isset($routes[$requestMethod])) {
@@ -36,13 +45,17 @@ if (isset($routes[$requestMethod])) {
         $pattern = '#^' . $route . '$#';
         if (preg_match($pattern, $pathInfo, $matches)) {
             $params = array_slice($matches, 1);
-            call_user_func_array([$zimmerController, $callback], $params);
+            
+            if (strpos($route, 'zimmer') !== false) {
+                // Zimmer-Route
+                call_user_func_array([$zimmerController, $callback], $params);
+            } elseif (strpos($route, 'zusatzleistungen') !== false) {
+                // Zusatzleistungen-Route
+                call_user_func_array([$zusatzleistungenController, $callback], $params);
+            }
+            
             break; // Schleife verlassen, nachdem eine passende Route gefunden wurde
         }
     }
 }
-
-// Wenn keine passende Route gefunden wurde, zeige eine Fehlermeldung an
-header('HTTP/1.1 404 Not Found');
-echo '404 Not Found';
 ?>
